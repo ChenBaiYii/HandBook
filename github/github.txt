@@ -1,0 +1,115 @@
+--- git/github ---
+
+准备设置:  将会保存到 ~/.gitconfig 将会同仓库一起被公开
+    git config --global user.name ""
+    git config --global user.email ""
+    git config --global color.ui auto  输出的结果会有更高的可读性
+
+生产ssh key:
+    ssh-keygen -t rsa -C "email"
+    id_rsa  私有秘钥
+    id_rsa.pub  公有秘钥
+
+在github中添加公钥, 就可以用私钥认证了
+    SSH and GPG keys
+
+    cat ~/.ssh/id_rsa.pub  添加到 github SSH
+    添加后账号邮箱将会收到一封添加公钥密匙成功的邮件, 然后就可以用手中的私钥和github认证通信了
+
+    ssh -T git@github.com  中途会要求输入root密码和gen-key时候的密码
+
+创建仓库:
+    new repository  创建新仓库
+    init readme  如果要添加本地的已有仓库就不要选,手动push
+    https://github.com/ChenBaiYii/hello-world.git  新仓库的链接地址
+    然后git clone这个仓库, 会要求输入公钥密码(本机有公钥就不用输入), 私有仓库会要求账号密码
+
+编写代码:
+    git status  仓库状态
+        untracked fiels  未追踪的文件
+    git add file_name  添加文件到追踪
+    git rm --cached file_path
+    git commit -m "message"  提交文件到本地仓库 -m 标记消息
+    git log  提交日志
+
+    git push 提交到github, 私有仓库要输入用户名和密码
+
+详细操作:
+    git init  初始化仓库, 会生产.git文件夹
+    
+
+    git log:  日志
+        git log  查看日志只能查看以当前状态为终点的历史日志
+        git log --pretty=short  只显示提交日志的第一行
+        git log file_name  显示特定文件的提交信息
+        git log -p  显示文件的改动 同样可以指定file_name显示特定文件
+        git log --graph  以图表形式查看分支
+        git reflog  查看当前仓库操作日志
+    
+    git diff:  查看工作树和暂存区的差别
+        git diff HEAD  查看工作树和最新提交的差别
+
+    git branch:  显示分支预览
+        git branch -a  同时显示本地和远程的分支信息
+
+    git checkout -b  创建切换分支
+    git checkout -  切换回上一个分支
+
+    git merge:  合并分支
+        git merge branch_name  合并分支
+        git merge --no-ff branch_name  合并提交分支
+
+    git reset:  回溯历史版本
+        git reset --hard commit_hash  回溯到指定提交
+
+    git commit:  提交
+        git commit --amend  修改提交信息
+
+    git rebase:  压缩历史
+        git rebase -i HEAD~2  当前分支中包含HEAD(最新提交)在内的两个最新历史记录为对象, 并打开
+
+推送至远程仓库:
+    git remote add:  添加远程仓库
+        git remote add origin github_repository_path.git
+    git push:  推送至远程仓库
+        git push -u origin masert  推送至master分支
+        git push -u origin feature  推送至其他分支
+        如果仓库是从远程获取的出现改动必须add,commit，然后直接git push
+
+
+
+从远程仓库获取:
+    git clone:  获取
+        git clone repository_path.git
+    
+
+    git pull:  获取最新的远程仓库分支
+        git pull origin feature  获取最新的feature内容
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
