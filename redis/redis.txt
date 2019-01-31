@@ -253,32 +253,20 @@ reids 支持两种持久化 RDB AOF
         aof_current_size和aof_base_size可以通过info Persistence统计信息中查看
 
 -- 主从复制 --
-    配置复制的三种方法:  复制后可以使用 info replication 查看复制信息
-            slaveof no one 断绝主从关系,数据复制的数据仍然保存
-            切换新的主服务器后将删除旧主的复制数据
-        在配置文件中加入 slaveof {master_host} {master_port} 随启动生效
-        redis-server 启动命令后添加 --slaveof {master_host} {master_port} 
-        直接使用命令 slaveof {master_host} {master_port}
+    断开主从: slaveof no one 断绝主从关系,数据复制的数据仍然保存,切换新的主服务器后将删除旧主的复制数据
+    配置复制的三种方法:  复制后可以使用 info replication 查看复制信息            
+        1.在配置文件中加入 slaveof {master_host} {master_port} 随启动生效
+        2.redis-server 启动命令后添加 --slaveof {master_host} {master_port} 
+        3.直接使用命令 slaveof {master_host} {master_port}
     安全:  主节点设置requirepass参数进行密码验证
     只读:  从节点默认slave-read-only=yes 只读
     传输延时:
         repl-disable-tcp-nodelay 默认关闭, 如果可以容忍默认40ms延时,则可以开启节省带宽
-
-
-
-        
-
     
-    
-
-
-
-
-
-
-
-
-
+    全量复制: 开销很大,一般用于初次复制
+        psync ? -1        
+    部分复制: reids2.8需要,用于处理主从复制中因网络闪断等原因造成的数据丢失场景,有效避免全量复制的开销
+        psync {runid} {offset}
 
 
 

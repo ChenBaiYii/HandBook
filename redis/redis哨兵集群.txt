@@ -1,0 +1,42 @@
+--- redis sentinel ---
+配置:
+    redis-sentinel-7777.conf
+        port 7777  哨兵端口
+        daemonize yes
+        logfile '7777.log'  日志位置
+        dir /opt/soft/reids/data  哨兵工作目录  
+        sentinel monitor mymaster 127.0.0.1 6379 2  要监控的主节点位置,以及投票要求
+        sentinel down-after-milliseconds mymaster 30000  判断节点不可达的参数
+        sentinel parallel-syncs mymaster 1  故障转移后,每次向新主节点发送复制操作的从节点个数
+        sentinel failover-timeout mymaster 18000  故障转移超时时间
+        * 其他参数见redis文档
+启动:  哨兵之间能彼此感知对方,自动寻找主从节点
+    redis-sentinel sentinel7777.conf   根据配置启动哨兵
+    redis-server redis-sentinel-7777.conf --sentinel  同上
+
+sentinel API:
+    sentinel masters  展示所以主节点信息
+        sentinel master master_name  特定主节点的相关信息
+    sentinel slaves master_name  展示指定主节点的从节点相关信息及统计
+    sentinel sentinel master_nmae  展示指定主节点的哨兵节点集合,不包括当前哨兵节点
+    sentinel get-master-addr-by-name master_name  返回指定master的ip和port
+    sentinel failover master_name  对指定主节点进行强制故障转移(没有和其他哨兵协商)
+    sentinel flushconfig  将哨兵配置强制刷到磁盘上
+    sentinel remove master_name  取消当前哨兵对指定主节点的监控
+    sentinel monitor <master_name> <ip> <port> <quorum>  同配置文件
+    sentinel is-master-down-by-addr  哨兵节点之间用来交换对主节点是否下线的判断
+
+
+
+-- redis cluster --
+
+
+
+
+
+
+
+
+
+
+
