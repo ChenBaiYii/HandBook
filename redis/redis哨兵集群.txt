@@ -27,8 +27,68 @@ sentinel API:
     sentinel is-master-down-by-addr  哨兵节点之间用来交换对主节点是否下线的判断
 
 
-
 -- redis cluster --
+
+配置:
+    准备节点
+        redis集群一般由多个节点组成,节点数至少为6个才能保证组成完整高可用的集群,每个节点需要
+        开启cluster-enabled yes让reids运行在集群模式下
+        port 6379  节点端口
+        cluster-enabled yes  开启集群模式
+        cluster-node-timeout 15000  节点超时时间,单位毫秒
+        cluster-config-file "nodes-6379.conf"  集群内部配置文件
+        其他配置和单机模式一致, 第一次启动时如果没有集群配置文件,它会自动创建一份,文件名称采用cluster-config-file参数控制
+        流程:(python 描述)
+            if node.is_start:
+                if cluster_is_start:
+                        if cluster_config_file.is_exists:
+                            run("use cluster config")
+                        else:
+                            run("gen cluster config file")
+                    else:
+                        run("normal mode")
+
+        
+节点握手:
+    cluster nodes  获取集群节点状态
+    cluster info  集群当前状态
+    cluster meet 127.0.0.1 6380  客户端让6379和6380进行握手
+
+分配槽
+    redis-cli -h 127.0.0.1 -p 6379 cluster addslots {0...5461}
+    redis-cli -h 127.0.0.1 -p 6380 cluster addslots {5462...10922}
+    redis-cli -h 127.0.0.1 -p 6381 cluster addslots {10923...16383}
+
+扩容集群:
+    1.准备新节点 redis-server some-config.conf  作为孤儿节点运行
+    2.加入集群  集群中任意节点执行 cluster meet {新节点的ip和端口}
+    3.迁移槽数据 ...
+
+        
+
+-- 缓存设计 --
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
